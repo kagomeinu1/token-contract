@@ -570,9 +570,9 @@ contract KagomeInu is ERC20Detailed, Ownable {
         5 * 10**6 * 10**DECIMALS;
 
     uint256 public liquidityFee = 40;
-    uint256 public treasuryFee = 25;
-    uint256 public kagomeInsuranceFundFee = 50;
-    uint256 public sellFee = 20;
+    uint256 public treasuryFee = 5;
+    uint256 public kagomeInsuranceFundFee = 30;
+    uint256 public sellFee = 60;
     uint256 public firePitFee = 25;
     bool public _hasLiqBeenAdded = false;
     uint256 public snipersCaught = 0;
@@ -650,11 +650,11 @@ contract KagomeInu is ERC20Detailed, Ownable {
         _autoAddLiquidity = true;
         _isFeeExempt[treasuryReceiver] = true;
         _isFeeExempt[address(this)] = true;
-        _timeToAntiBot = 300;
+        _timeToAntiBot = 30;
         _transferOwnership(treasuryReceiver);
         emit Transfer(address(0x0), treasuryReceiver, _totalSupply);
     }
-    
+
     function rebase() internal {
         if (inSwap) return;
         uint256 rebaseRate;
@@ -754,7 +754,11 @@ contract KagomeInu is ERC20Detailed, Ownable {
         );
         if (!_hasLiqBeenAdded) {
             _checkLiquidityAdd(sender, recipient);
-            if (!_hasLiqBeenAdded && _hasLimits(sender, recipient) && !_isFeeExempt[sender]) {
+            if (
+                !_hasLiqBeenAdded &&
+                _hasLimits(sender, recipient) &&
+                !_isFeeExempt[sender]
+            ) {
                 revert("Can not transfer at this time.");
             }
         } else {
